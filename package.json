@@ -1,0 +1,18 @@
+{
+  "name": "gab-base",
+  "version": "1.0.0",
+  "description": "Base for all GAwesomeBot repositories",
+  "main": "dist/index",
+  "scripts": {
+    "test": "echo It works:tm:"
+  },
+  "author": "GAwesomeBot Team (https://github.com/orgs/GAwesomeBot/people)",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
+    "eslint": "^6.8.0",
+    "eslint-config-bamboo": "^3.0.0",
+    "typescript": "^3.9.0-dev.20200326"
+  }
+}

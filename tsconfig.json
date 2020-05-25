@@ -1,0 +1,9 @@
+{
+	"extends": "eslint-config-bamboo",
+	"compilerOptions": {
+		"target": "ES2019"
+	},
+	"include": [
+		"src/**/*.ts"
+	]
+}

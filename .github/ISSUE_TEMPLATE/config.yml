@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GAwesomeBot Support Server
+    url: https://discord.gg/g2Yx8pb
+    about: Got any questions or need help with our bot? Ask them here!
+  - name: GAwesomeBot Security Help
+    url: https://discord.gg/g2Yx8pb # For now, we link the Discord, we may change this in the future
+    about: Found any security issues in our bot? Please contact us here!
