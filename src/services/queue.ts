@@ -15,6 +15,17 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-export function sleep(time: number): Promise<void> {
-	return new Promise(resolve => setTimeout(resolve, time));
+import { Redis } from 'ioredis';
+import * as RedisConstants from '../constants/redis';
+import * as QueueTypes from '../lib/types/Queue';
+import { WebSocketEvents } from '@klasa/ws';
+
+export async function pushWorkerMessage<D extends QueueTypes.GenericWorkerMessageData>(redis: Redis, event: WebSocketEvents, shard: number, data: D): Promise<void> {
+	const message: QueueTypes.WorkerMessage<D> = {
+		event,
+		shard,
+		data,
+	};
+	const payload = JSON.stringify(message);
+	await redis.lpush(RedisConstants.QueueWorkersBacklogKey, payload);
 }

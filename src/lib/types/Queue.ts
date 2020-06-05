@@ -15,14 +15,23 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Ready } from './Ready';
-import { GuildCreate } from './GuildCreate';
-import { GuildMembersChunk } from './GuildMembersChunk';
-import { MessageCreate } from './MessageCreate';
+import { WebSocketEvents } from '@klasa/ws';
 
-export default [
-	new Ready(),
-	new GuildMembersChunk(),
-	new GuildCreate(),
-	new MessageCreate(),
-];
+export interface GenericWorkerMessageData {
+	id?: string;
+}
+export interface WorkerMessage<D extends GenericWorkerMessageData> {
+	event: WebSocketEvents;
+	shard: number;
+	data: D;
+}
+
+export interface GuildCreateMessageData extends GenericWorkerMessageData {
+	id?: string;
+	guild_id: string;
+}
+
+export interface MessageCreateMessageData extends GenericWorkerMessageData {
+	id?: string;
+	guild_id: string;
+}

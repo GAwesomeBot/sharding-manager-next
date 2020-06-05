@@ -24,6 +24,8 @@ import {
 	resetEmojis, resetMembers, resetRoles,
 } from '../services/guild';
 import { updateChannel } from '../services/channel';
+import { GuildCreateMessageData } from '../lib/types/Queue';
+import { pushWorkerMessage } from '../services/queue';
 
 export class GuildCreate extends EventHandler {
 
@@ -32,9 +34,21 @@ export class GuildCreate extends EventHandler {
 	}
 
 	public async handler(data: GuildCreateDispatch): Promise<void> {
-		await makeGuildAvailable(this.redis, data.d.id);
+		const unavailable = await makeGuildAvailable(this.redis, data.d.id);
 		await this.saveGuild(data.d);
 		await this.requestGuildMembers(data);
+		if (!unavailable) await this.pushMessage(data);
+	}
+
+	private async pushMessage(data: GuildCreateDispatch) {
+		await pushWorkerMessage<GuildCreateMessageData>(
+			this.redis,
+			WebSocketEvents.GuildCreate,
+			data.shard_id,
+			{
+				guild_id: data.d.id,
+			},
+		);
 	}
 
 	private async requestGuildMembers(data: GuildCreateDispatch) {
