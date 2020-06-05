@@ -19,10 +19,12 @@ import { Ready } from './Ready';
 import { GuildCreate } from './GuildCreate';
 import { GuildMembersChunk } from './GuildMembersChunk';
 import { MessageCreate } from './MessageCreate';
+import { MessageUpdate } from './MessageUpdate';
 
 export default [
 	new Ready(),
 	new GuildMembersChunk(),
 	new GuildCreate(),
 	new MessageCreate(),
+	new MessageUpdate(),
 ];

@@ -15,17 +15,6 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Redis } from 'ioredis';
-import * as RedisConstants from '../constants/redis';
-import * as QueueTypes from '../lib/types/Queue';
-import { WebSocketEvents } from '@klasa/ws';
+import { APIMessageData } from '@klasa/dapi-types';
 
-export async function pushWorkerMessage<D>(redis: Redis, event: WebSocketEvents, shard: number, data: D): Promise<void> {
-	const message: QueueTypes.WorkerMessage<D> = {
-		event,
-		shard,
-		data,
-	};
-	const payload = JSON.stringify(message);
-	await redis.lpush(RedisConstants.QueueWorkersBacklogKey, payload);
-}
+export type PartialMessageUpdateData = { id: string; channel_id: string } & Partial<APIMessageData>;

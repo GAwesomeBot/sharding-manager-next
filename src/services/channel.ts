@@ -15,10 +15,33 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 import { Redis } from 'ioredis';
-import { APIChannelData } from '@klasa/dapi-types/dist';
+import { APIChannelData, APIMessageData } from '@klasa/dapi-types/dist';
+import { unpackRedisObject } from '../utils';
+import { PartialMessageUpdateData } from '../lib/types/PartialData';
 import * as RedisConstants from '../constants/redis';
 
 export async function updateChannel(redis: Redis, channel: APIChannelData) {
 	const payload = JSON.stringify(channel);
 	await redis.hset(RedisConstants.GetCacheChannelHashmapKey(), channel.id, payload);
+}
+
+export async function updateMessage(redis: Redis, message: APIMessageData) {
+	const payload = JSON.stringify(message);
+	await redis.setex(RedisConstants.GetCacheChannelMessageKey(message.channel_id, message.id), RedisConstants.CacheChannelMessageTTL, payload);
+}
+
+export async function refreshMessage(redis: Redis, channelId: string, messageId: string) {
+	await redis.expire(RedisConstants.GetCacheChannelMessageKey(channelId, messageId), RedisConstants.CacheChannelMessageTTL);
+}
+
+/**
+ * Returns boolean indicating whether the message was patched successfully.
+*/
+export async function patchMessage(redis: Redis, message: PartialMessageUpdateData): Promise<boolean> {
+	const cachedMessageString = await redis.get(RedisConstants.GetCacheChannelMessageKey(message.channel_id, message.id));
+	if (!cachedMessageString) return false;
+	const cachedMessage = unpackRedisObject<APIMessageData>(cachedMessageString);
+	const patchedMessage = { ...cachedMessage, ...message };
+	await updateMessage(redis, patchedMessage);
+	return true;
 }

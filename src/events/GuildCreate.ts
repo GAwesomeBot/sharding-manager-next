@@ -24,7 +24,6 @@ import {
 	resetEmojis, resetMembers, resetRoles,
 } from '../services/guild';
 import { updateChannel } from '../services/channel';
-import { GuildCreateMessageData } from '../lib/types/Queue';
 import { pushWorkerMessage } from '../services/queue';
 
 export class GuildCreate extends EventHandler {
@@ -41,13 +40,11 @@ export class GuildCreate extends EventHandler {
 	}
 
 	private async pushMessage(data: GuildCreateDispatch) {
-		await pushWorkerMessage<GuildCreateMessageData>(
+		await pushWorkerMessage<APIGuildData>(
 			this.redis,
 			WebSocketEvents.GuildCreate,
 			data.shard_id,
-			{
-				guild_id: data.d.id,
-			},
+			data.d,
 		);
 	}
 

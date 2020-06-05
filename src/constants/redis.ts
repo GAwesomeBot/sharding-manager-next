@@ -30,7 +30,8 @@ export const GetCacheGuildEmojisHashmapKey = (guildId: string) => `${Namespaces.
 export const GetCacheGuildMembersHashmapKey = (guildId: string) => `${Namespaces.Cache}:guilds.${guildId}.members`;
 export const GetCacheUserHashmapKey = () => `${Namespaces.Cache}:users`;
 export const GetCacheChannelHashmapKey = () => `${Namespaces.Cache}:channels`;
-export const GetCacheChannelMessagesHashmapKey = (channelId: string) => `${Namespaces.Cache}:channels.${channelId}.messages`;
+export const GetCacheChannelMessageKey = (channelId: string, messageId: string) => `${Namespaces.Cache}:channels.${channelId}.messages.${messageId}`;
+export const CacheChannelMessageTTL = 900;
 export const GetCacheChannelMessageReactionsSetKey = (channelId: string, messageId: string) => `${Namespaces.Cache}:channels.${channelId}.messages.${messageId}.reactions`;
 
 export const QueueWorkersBacklogKey = `${Namespaces.Queue}:workers.backlog`;

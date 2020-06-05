@@ -15,31 +15,31 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { WebSocketEvents, MessageCreateDispatch } from '@klasa/ws';
-import { APIMessageData } from '@klasa/dapi-types';
+import { WebSocketEvents, MessageUpdateDispatch } from '@klasa/ws';
 import { EventHandler } from '../lib/structures/EventHandler';
 import { pushWorkerMessage } from '../services/queue';
-import { updateMessage } from '../services/channel';
+import { patchMessage } from '../services/channel';
+import { PartialMessageUpdateData } from '../lib/types/PartialData';
 
-export class MessageCreate extends EventHandler {
+export class MessageUpdate extends EventHandler {
 
 	public constructor() {
-		super(WebSocketEvents.MessageCreate);
+		super(WebSocketEvents.MessageUpdate);
 	}
 
-	public async handler(data: MessageCreateDispatch): Promise<void> {
-		await this.saveMessage(data.d);
+	public async handler(data: MessageUpdateDispatch): Promise<void> {
+		await this.patchMessage(data.d);
 		await this.pushMessage(data.shard_id, data.d);
 	}
 
-	private async saveMessage(message: APIMessageData) {
-		await updateMessage(this.redis, message);
+	private async patchMessage(message: PartialMessageUpdateData) {
+		await patchMessage(this.redis, message);
 	}
 
-	private async pushMessage(shard: number, message: APIMessageData) {
-		await pushWorkerMessage<APIMessageData>(
+	private async pushMessage(shard: number, message: PartialMessageUpdateData) {
+		await pushWorkerMessage<PartialMessageUpdateData>(
 			this.redis,
-			WebSocketEvents.MessageCreate,
+			WebSocketEvents.MessageUpdate,
 			shard,
 			message,
 		);

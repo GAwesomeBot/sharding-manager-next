@@ -17,4 +17,4 @@
 
 export * from './getShardConfig';
 export * from './getShardManagerId';
-
+export * from './unpackRedisObject';

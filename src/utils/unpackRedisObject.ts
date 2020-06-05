@@ -15,17 +15,11 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Redis } from 'ioredis';
-import * as RedisConstants from '../constants/redis';
-import * as QueueTypes from '../lib/types/Queue';
-import { WebSocketEvents } from '@klasa/ws';
-
-export async function pushWorkerMessage<D>(redis: Redis, event: WebSocketEvents, shard: number, data: D): Promise<void> {
-	const message: QueueTypes.WorkerMessage<D> = {
-		event,
-		shard,
-		data,
-	};
-	const payload = JSON.stringify(message);
-	await redis.lpush(RedisConstants.QueueWorkersBacklogKey, payload);
+export function unpackRedisObject<T>(redisString: string): T {
+	try {
+		return JSON.parse(redisString) as T;
+	} catch (err) {
+		// TODO: Implement proper Errors & logging
+		throw Error('Received malformed JSON string from Redis.');
+	}
 }

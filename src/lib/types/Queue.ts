@@ -17,21 +17,8 @@
 
 import { WebSocketEvents } from '@klasa/ws';
 
-export interface GenericWorkerMessageData {
-	id?: string;
-}
-export interface WorkerMessage<D extends GenericWorkerMessageData> {
+export interface WorkerMessage<D> {
 	event: WebSocketEvents;
 	shard: number;
 	data: D;
-}
-
-export interface GuildCreateMessageData extends GenericWorkerMessageData {
-	id?: string;
-	guild_id: string;
-}
-
-export interface MessageCreateMessageData extends GenericWorkerMessageData {
-	id?: string;
-	guild_id: string;
 }
