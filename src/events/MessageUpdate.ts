@@ -16,9 +16,10 @@
  */
 
 import { WebSocketEvents, MessageUpdateDispatch } from '@klasa/ws';
+import { APIMessageData } from '@klasa/dapi-types';
 import { EventHandler } from '../lib/structures/EventHandler';
-import { pushWorkerMessage } from '../services/queue';
-import { patchMessage } from '../services/channel';
+import { pushWorkerUpdateMessage } from '../services/queue';
+import { patchMessage, getMessage } from '../services/channel';
 import { PartialMessageUpdateData } from '../lib/types/PartialData';
 
 export class MessageUpdate extends EventHandler {
@@ -37,11 +38,13 @@ export class MessageUpdate extends EventHandler {
 	}
 
 	private async pushMessage(shard: number, message: PartialMessageUpdateData) {
-		await pushWorkerMessage<PartialMessageUpdateData>(
+		const cachedMessage = await getMessage(this.redis, message.channel_id, message.id);
+		await pushWorkerUpdateMessage<PartialMessageUpdateData, APIMessageData>(
 			this.redis,
 			WebSocketEvents.MessageUpdate,
 			shard,
 			message,
+			cachedMessage,
 		);
 	}
 

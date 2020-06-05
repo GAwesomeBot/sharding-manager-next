@@ -29,3 +29,14 @@ export async function pushWorkerMessage<D>(redis: Redis, event: WebSocketEvents,
 	const payload = JSON.stringify(message);
 	await redis.lpush(RedisConstants.QueueWorkersBacklogKey, payload);
 }
+
+export async function pushWorkerUpdateMessage<D, C>(redis: Redis, event: WebSocketEvents, shard: number, data: D, cachedData: C | null) {
+	const message: QueueTypes.WorkerUpdateMessage<D, C> = {
+		event,
+		shard,
+		data,
+		cached_data: cachedData,
+	};
+	const payload = JSON.stringify(message);
+	await redis.lpush(RedisConstants.QueueWorkersBacklogKey, payload);
+}

@@ -20,6 +20,12 @@ import { unpackRedisObject } from '../utils';
 import { PartialMessageUpdateData } from '../lib/types/PartialData';
 import * as RedisConstants from '../constants/redis';
 
+export async function getMessage(redis: Redis, channelId: string, messageId: string): Promise<APIMessageData | null> {
+	const cachedMessageString = await redis.get(RedisConstants.GetCacheChannelMessageKey(channelId, messageId));
+	if (!cachedMessageString) return null;
+	return unpackRedisObject<APIMessageData>(cachedMessageString);
+}
+
 export async function updateChannel(redis: Redis, channel: APIChannelData) {
 	const payload = JSON.stringify(channel);
 	await redis.hset(RedisConstants.GetCacheChannelHashmapKey(), channel.id, payload);
@@ -38,9 +44,8 @@ export async function refreshMessage(redis: Redis, channelId: string, messageId:
  * Returns boolean indicating whether the message was patched successfully.
 */
 export async function patchMessage(redis: Redis, message: PartialMessageUpdateData): Promise<boolean> {
-	const cachedMessageString = await redis.get(RedisConstants.GetCacheChannelMessageKey(message.channel_id, message.id));
-	if (!cachedMessageString) return false;
-	const cachedMessage = unpackRedisObject<APIMessageData>(cachedMessageString);
+	const cachedMessage = await getMessage(redis, message.channel_id, message.id);
+	if (!cachedMessage) return false;
 	const patchedMessage = { ...cachedMessage, ...message };
 	await updateMessage(redis, patchedMessage);
 	return true;

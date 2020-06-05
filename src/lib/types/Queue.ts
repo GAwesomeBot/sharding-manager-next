@@ -22,3 +22,7 @@ export interface WorkerMessage<D> {
 	shard: number;
 	data: D;
 }
+
+export interface WorkerUpdateMessage<D, C> extends WorkerMessage<D> {
+	cached_data: C | null;
+}
