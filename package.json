@@ -5,7 +5,7 @@
   "main": "dist/index",
   "scripts": {
     "test": "echo It works:tm:",
-    "run": "tsc src/manager.ts"
+    "build": "tsc"
   },
   "author": "GAwesomeBot Team (https://github.com/orgs/GAwesomeBot/people)",
   "license": "GPL-3.0",

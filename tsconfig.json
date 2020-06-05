@@ -1,7 +1,14 @@
 {
 	"extends": "eslint-config-bamboo",
 	"compilerOptions": {
-		"target": "ES2019"
+		"target": "ES2020",
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noUnusedParameters": true,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": true,
+		"outDir": "./dist"
 	},
 	"include": [
 		"src/**/*.ts"

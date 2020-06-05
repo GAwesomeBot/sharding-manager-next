@@ -16,8 +16,7 @@
  */
 
 import { Manager } from './Manager';
-import { WebSocketEvents } from '@klasa/ws';
-import * as Types from '@klasa/ws/dist/src/types/InternalWebSocket';
+import { WebSocketEvents, DispatchPayload } from '@klasa/ws';
 
 export abstract class EventHandler {
 
@@ -29,7 +28,7 @@ export abstract class EventHandler {
 		this.event = event;
 	}
 
-	abstract async handler(data: Types.DispatchPayload | string | Error): Promise<void>;
+	abstract async handler(data: DispatchPayload | string | Error): Promise<void>;
 
 	public listen(manager: Manager) {
 		this.manager = manager;

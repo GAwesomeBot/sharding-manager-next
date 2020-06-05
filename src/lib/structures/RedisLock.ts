@@ -16,7 +16,7 @@
  */
 
 import { Redis } from 'ioredis';
-import { sleep } from '../../utils/sleep';
+import { sleep } from '@klasa/utils';
 
 export class RedisLock {
 
