@@ -42,7 +42,7 @@ export class RedisLock {
 	 */
 	public async lock(): Promise<boolean> {
 		const result = await this.redis.getset(this.key, 1);
-		return result === '0';
+		return result !== '1';
 	}
 
 	public async release() {
